@@ -8,12 +8,12 @@ local config = wezterm.config_builder()
 
 -- For example, changing the color scheme:
 config.color_scheme = "Liquid Carbon Transparent (Gogh)"
-config.initial_cols = 168
-config.initial_rows = 36
-config.font = wezterm.font(
-    "BerkeleyMono Nerd Font Mono Plus Font Awesome Plus Font Awesome Extension Plus Octicons Plus Power Symbols Plus Codicons Plus Pomicons Plus Font Logos Plus Material Design Icons Plus Weather Icons"
-)
-
+config.initial_cols = 110
+config.initial_rows = 20
+config.font = wezterm.font("BerkeleyMono Nerd Font Mono")
 config.use_fancy_tab_bar = true
+
+config.window_background_opacity = 0.55
+config.macos_window_background_blur = 20
 -- and finally, return the configuration to wezterm
 return config
