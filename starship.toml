@@ -1,0 +1,80 @@
+format = "$directory${custom.giturl}$git_branch$git_status[ ](fg:#444444)"
+right_format = "[](fg:#444444)$python$golang$rust$status$cmd_duration$custom"
+[cmd_duration]
+format = "[](fg:#7a7a7a bg:#444444)[ $duration ]($style)"
+style = "fg:#9b9b9b bg:#444444"
+
+[custom]
+[custom.direnv]
+format = "[](fg:#7a7a7a bg:#444444)[ $symbol ]($style)"
+style = "fg:#7a7a7a bg:#444444"
+symbol = "[▼](fg:white bg:#444444)"
+when = "test \"$DIRENV_WATCHES\" != \"\""
+
+[custom.vim_shell]
+format = "[](fg:#7a7a7a bg:#444444)[ $symbol ]($style)"
+style = "fg:#7a7a7a bg:#444444"
+symbol = "[](fg:green bg:#444444)"
+when = "test \"$VIMRUNTIME\" != \"\""
+
+[custom.giturl]
+disabled = false
+description = "Display symbol for remote Git server"
+command = "check-git-remote"
+when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
+shell = ["bash", "--noprofile", "--norc"]
+format = "[ $output ]($style)"
+style = "fg:#00afff bg:#444444"
+
+[directory]
+format = "[ $path ]($style)"
+style = "fg:#00afff bg:#444444"
+truncate_to_repo = false
+
+[git_branch]
+format = "[](fg:#7a7a7a bg:#444444)[ $branch(:$remote_branch) ]($style)"
+style = "fg:#00dd00 bg:#444444"
+
+[git_metrics]
+added_style = "fg:#b4951e bg:#444444"
+deleted_style = "fg:bright-red bg:235"
+disabled = false
+format = "([+$added]($added_style))[]($added_style)"
+
+[git_status]
+ahead = "⇡$count"
+behind = "⇣$count"
+diverged = "⇡$ahead_count⇣$behind_count"
+format = "[$all_status$ahead_behind ]($style)"
+modified = "[!$count ](fg:#b4951e bg:#444444)"
+style = "fg:#b4951e bg:#444444"
+untracked = "[?$count ](fg:#00afff bg:#444444)"
+
+[hg_branch]
+format = "[ $symbol$branch ]($style)"
+symbol = " "
+
+
+[status]
+disabled = false
+format = "[ $signal_name $symbol ]($style)"
+map_symbol = true
+sigint_symbol = "[✘](fg:#d60202 bg:#444444)"
+style = "bg:#444444"
+success_symbol = "[✔](fg:green bg:#444444)"
+symbol = "[✘](fg:#d60202 bg:#444444)"
+
+[python]
+symbol = ""
+style = "fg:#9b9b9b bg:#444444"
+format = '[$symbol( $version)( $virtualenv)]($style)'
+
+[golang]
+symbol = ""
+style = "fg:#9b9b9b bg:#444444"
+format = '[[ $symbol( $version) ](fg:#9b9b9b bg:#444444)]($style)'
+
+[rust]
+symbol = "🦀 "
+style = "fg:#9b9b9b bg:#444444"
+format = '[$symbol$version]($style)'
