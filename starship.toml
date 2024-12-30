@@ -1,5 +1,7 @@
 format = "$directory${custom.giturl}$git_branch$git_status[ ](fg:#444444)"
 right_format = "[](fg:#444444)$python$golang$rust$status$cmd_duration$custom"
+command_timeout = 300
+
 [cmd_duration]
 format = "[](fg:#7a7a7a bg:#444444)[ $duration ]($style)"
 style = "fg:#9b9b9b bg:#444444"
