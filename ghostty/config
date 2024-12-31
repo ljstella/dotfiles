@@ -2,3 +2,4 @@ font-family = "BerkeleyMono Nerd Font Mono Plus Font Awesome Plus Font Awesome E
 window-height = 25
 window-width = 115
 theme = light:dayfox,dark:Blue Matrix
+quit-after-last-window-closed: true
