@@ -34,7 +34,7 @@ $memory_usage\
 [ ](fg:prev_bg)\
 $line_break$character"""
 
-palette = 'catppuccin_mocha'
+palette = 'catppuccin_latte'
 
 [palettes.catppuccin_latte]
 color_rosewater = "#dc8a78"
