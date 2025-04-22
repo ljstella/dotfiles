@@ -1,23 +1,200 @@
-format = "$directory${custom.giturl}$git_branch$git_status[ ](fg:#444444)"
-right_format = "[](fg:#444444)$python$golang$rust$status$cmd_duration$custom"
-command_timeout = 300
+"$schema" = 'https://starship.rs/config-schema.json'
 
-[cmd_duration]
-format = "[](fg:#7a7a7a bg:#444444)[ $duration ]($style)"
-style = "fg:#9b9b9b bg:#444444"
+format = """
+[](color_surface0)\
+$os\
+[](fg:prev_fg bg:color_maroon)\
+$username\
+$hostname\
+[](fg:prev_bg bg:color_yellow)\
+$directory\
+[](fg:prev_bg bg:color_teal)\
+${custom.giturl}\
+$git_branch\
+$git_commit\
+$git_status\
+[](fg:prev_bg bg:color_blue)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+[](fg:prev_bg bg:color_mauve)\
+$docker_context\
+$conda\
+$jobs\
+[](fg:prev_bg bg:color_surface0)\
+$time\
+$cmd_duration\
+$memory_usage\
+[ ](fg:prev_bg)\
+$line_break$character"""
 
-[custom]
-[custom.direnv]
-format = "[](fg:#7a7a7a bg:#444444)[ $symbol ]($style)"
-style = "fg:#7a7a7a bg:#444444"
-symbol = "[▼](fg:white bg:#444444)"
-when = "test \"$DIRENV_WATCHES\" != \"\""
+palette = 'catppuccin_mocha'
 
-[custom.vim_shell]
-format = "[](fg:#7a7a7a bg:#444444)[ $symbol ]($style)"
-style = "fg:#7a7a7a bg:#444444"
-symbol = "[](fg:green bg:#444444)"
-when = "test \"$VIMRUNTIME\" != \"\""
+[palettes.catppuccin_latte]
+color_rosewater = "#dc8a78"
+color_flamingo = "#dd7878"
+color_pink = "#ea76cb"
+color_mauve = "#8839ef"
+color_red = "#d20f39"
+color_maroon = "#e64553"
+color_peach = "#fe640b"
+color_yellow = "#df8e1d"
+color_green = "#40a02b"
+color_teal = "#179299"
+color_sky = "#04a5e5"
+color_sapphire = "#209fb5"
+color_blue = "#1e66f5"
+color_lavender = "#7287fd"
+color_text = "#4c4f69"
+color_subtext1 = "#5c5f77"
+color_subtext0 = "#6c6f85"
+color_overlay2 = "#7c7f93"
+color_overlay1 = "#8c8fa1"
+color_overlay0 = "#9ca0b0"
+color_surface2 = "#acb0be"
+color_surface1 = "#bcc0cc"
+color_surface0 = "#ccd0da"
+color_base = "#eff1f5"
+color_mantle = "#e6e9ef"
+color_crust = "#dce0e8"
+
+[palettes.catppuccin_frappe]
+color_rosewater = "#f2d5cf"
+color_flamingo = "#eebebe"
+color_pink = "#f4b8e4"
+color_mauve = "#ca9ee6"
+color_red = "#e78284"
+color_maroon = "#ea999c"
+color_peach = "#ef9f76"
+color_yellow = "#e5c890"
+color_green = "#a6d189"
+color_teal = "#81c8be"
+color_sky = "#99d1db"
+color_sapphire = "#85c1dc"
+color_blue = "#8caaee"
+color_lavender = "#babbf1"
+color_text = "#c6d0f5"
+color_subtext1 = "#b5bfe2"
+color_subtext0 = "#a5adce"
+color_overlay2 = "#949cbb"
+color_overlay1 = "#838ba7"
+color_overlay0 = "#737994"
+color_surface2 = "#626880"
+color_surface1 = "#51576d"
+color_surface0 = "#414559"
+color_base = "#303446"
+color_mantle = "#292c3c"
+color_crust = "#232634"
+
+[palettes.catppuccin_macchiato]
+color_rosewater = "#f4dbd6"
+color_flamingo = "#f0c6c6"
+color_pink = "#f5bde6"
+color_mauve = "#c6a0f6"
+color_red = "#ed8796"
+color_maroon = "#ee99a0"
+color_peach = "#f5a97f"
+color_yellow = "#eed49f"
+color_green = "#a6da95"
+color_teal = "#8bd5ca"
+color_sky = "#91d7e3"
+color_sapphire = "#7dc4e4"
+color_blue = "#8aadf4"
+color_lavender = "#b7bdf8"
+color_text = "#cad3f5"
+color_subtext1 = "#b8c0e0"
+color_subtext0 = "#a5adcb"
+color_overlay2 = "#939ab7"
+color_overlay1 = "#8087a2"
+color_overlay0 = "#6e738d"
+color_surface2 = "#5b6078"
+color_surface1 = "#494d64"
+color_surface0 = "#363a4f"
+color_base = "#24273a"
+color_mantle = "#1e2030"
+color_crust = "#181926"
+
+[palettes.catppuccin_mocha]
+color_rosewater = "#f5e0dc"
+color_flamingo = "#f2cdcd"
+color_pink = "#f5c2e7"
+color_mauve = "#cba6f7"
+color_red = "#f38ba8"
+color_maroon = "#eba0ac"
+color_peach = "#fab387"
+color_yellow = "#f9e2af"
+color_green = "#a6e3a1"
+color_teal = "#94e2d5"
+color_sky = "#89dceb"
+color_sapphire = "#74c7ec"
+color_blue = "#89b4fa"
+color_lavender = "#b4befe"
+color_text = "#cdd6f4"
+color_subtext1 = "#bac2de"
+color_subtext0 = "#a6adc8"
+color_overlay2 = "#9399b2"
+color_overlay1 = "#7f849c"
+color_overlay0 = "#6c7086"
+color_surface2 = "#585b70"
+color_surface1 = "#45475a"
+color_surface0 = "#313244"
+color_base = "#1e1e2e"
+color_mantle = "#181825"
+color_crust = "#11111b"
+
+[os]
+disabled = false
+style = "bg:prev_bg fg:prev_bg"
+format = "[$symbol ]($style)"
+
+[os.symbols]
+Windows = "[](fg:color_blue bg:prev_fg)"
+Ubuntu = "[](fg:color_peach bg:prev_fg)"
+SUSE = "[](fg:color_green bg:prev_fg)"
+Raspbian = "[󰐿](fg:color_red bg:prev_fg)"
+Mint = "[󰣭](fg:color_green bg:prev_fg)"
+Macos = "[󰀵](fg:color_text bg:prev_fg)"
+Manjaro = "[](fg:color_green bg:prev_fg)"
+Linux = "[󰌽](fg:color_text bg:prev_fg)"
+Gentoo = "[󰣨](fg:color_text bg:prev_fg)"
+Fedora = "[󰣛](fg:color_red bg:prev_fg)"
+Alpine = "[](fg:color_teal bg:prev_fg)"
+Amazon = "[](fg:color_peach bg:prev_fg)"
+Android = "[](fg:color_green bg:prev_fg)"
+Arch = "[󰣇](fg:color_blue bg:prev_fg)"
+Artix = "[󰣇](fg:color_blue bg:prev_fg)"
+EndeavourOS = "[](fg:color_purple bg:prev_fg)"
+CentOS = "[](fg:color_blue bg:prev_fg)"
+Debian = "[󰣚](fg:color_red bg:prev_fg)"
+Redhat = "[󱄛](fg:color_red bg:prev_fg)"
+RedHatEnterprise = "[󱄛](fg:color_red bg:prev_fg)"
+Pop = "[](fg:color_teal bg:prev_fg)"
+
+[username]
+# by default only shows on SSH
+style_user = "bg:prev_bg fg:color_crust"
+style_root = "bg:prev_bg fg:color_crust"
+format = '[  $user ]($style)'
+
+[hostname]
+# by default only shows on SSH
+ssh_symbol = ""
+style = "fg:prev_fg bg:prev_bg"
+format = "[$ssh_symbol $hostname ]($style)"
+
+[directory]
+style = "bg:prev_bg fg:color_crust"
+read_only_style = "fg:color_red bg:prev_bg"
+format = "[ $path ]($style)[$read_only]($read_only_style)"
+truncation_length = 3
+truncation_symbol = "…/"
+read_only = "󰌾 "
 
 [custom.giturl]
 disabled = false
@@ -26,58 +203,103 @@ command = "check-git-remote"
 when = 'git rev-parse --is-inside-work-tree 2> /dev/null'
 shell = ["bash", "--noprofile", "--norc"]
 format = "[ $output ]($style)"
-style = "fg:#00afff bg:#444444"
+style = "fg:color_crust bg:prev_bg"
 ignore_timeout = true
 
-[directory]
-format = "[ $path ]($style)"
-style = "fg:#00afff bg:#444444"
-truncate_to_repo = false
-
 [git_branch]
-format = "[](fg:#7a7a7a bg:#444444)[ $branch(:$remote_branch) ]($style)"
-style = "fg:#00dd00 bg:#444444"
+symbol = ""
+style = "fg:color_crust bg:prev_bg"
+format = '[ $symbol $branch ]($style)'
 
-[git_metrics]
-added_style = "fg:#b4951e bg:#444444"
-deleted_style = "fg:bright-red bg:235"
-disabled = false
-format = "([+$added]($added_style))[]($added_style)"
+[git_commit]
+style = "fg:prev_fg bg:prev_bg"
+format = "[($tag)]($style) "
 
 [git_status]
-ahead = "⇡$count"
-behind = "⇣$count"
-diverged = "⇡$ahead_count⇣$behind_count"
-format = "[$all_status$ahead_behind ]($style)"
-modified = "[!$count ](fg:#b4951e bg:#444444)"
-style = "fg:#b4951e bg:#444444"
-untracked = "[?$count ](fg:#00afff bg:#444444)"
+style = "fg:color_crust bg:prev_bg"              # fg redefined, as prev module may not exist
+format = '[($all_status$ahead_behind )]($style)'
 
-[hg_branch]
-format = "[ $symbol$branch ]($style)"
-symbol = " "
+[nodejs]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"
+format = '[ $symbol( $version) ](fg:color_crust bg:prev_bg)' # bug, must set explicitly
 
+[c]
+symbol = " "
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
 
-[status]
-disabled = false
-format = "[ $signal_name $symbol ]($style)"
-map_symbol = true
-sigint_symbol = "[✘](fg:#d60202 bg:#444444)"
-style = "bg:#444444"
-success_symbol = "[✔](fg:green bg:#444444)"
-symbol = "[✘](fg:#d60202 bg:#444444)"
-
-[python]
-symbol = ""
-style = "fg:#9b9b9b bg:#444444"
-format = '[$symbol( $version)( $virtualenv)]($style)'
+[rust]
+symbol = "🦀"
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
 
 [golang]
 symbol = ""
-style = "fg:#9b9b9b bg:#444444"
-format = '[[ $symbol( $version) ](fg:#9b9b9b bg:#444444)]($style)'
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
 
-[rust]
-symbol = "🦀 "
-style = "fg:#9b9b9b bg:#444444"
-format = '[$symbol$version]($style)'
+[php]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
+
+[java]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
+
+[kotlin]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
+
+[haskell]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $version) ]($style)'
+
+[python]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"                     # fg redefined, as prev module may not exist
+format = '[ $symbol( $version)( $virtualenv) ]($style)'
+
+[docker_context]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"       # fg redefined, as prev module may not exist
+format = '[ $symbol( $context) ]($style)'
+
+[conda]
+symbol = ""
+style = "fg:color_crust bg:prev_bg"           # fg redefined, as prev module may not exist
+format = '[ $symbol( $environment) ]($style)'
+
+[jobs]
+symbol = "󰆅"
+style = "fg:color_crust bg:prev_bg"      # fg redefined, as prev module may not exist
+format = "[ $symbol( $number) ]($style)"
+
+[time]
+disabled = false
+time_format = "%R"
+style = "fg:color_text bg:prev_bg"
+format = '[  $time ]($style)'
+
+[cmd_duration]
+style = "fg:prev_fg bg:prev_bg"
+format = "[ $duration ]($style)"
+
+[memory_usage]
+symbol = "󰍛"
+style = "fg:bold color_red bg:prev_bg"
+format = "[$symbol ${ram}]($style) "
+disabled = false
+
+[character]
+disabled = false
+success_symbol = '[](bold fg:color_green)'
+error_symbol = '[](bold fg:color_red)'
+vimcmd_symbol = '[](bold fg:color_green)'
+vimcmd_replace_one_symbol = '[](bold fg:color_purple)'
+vimcmd_replace_symbol = '[](bold fg:color_purple)'
+vimcmd_visual_symbol = '[](bold fg:color_yellow)'
