@@ -6,14 +6,14 @@ $os\
 [](fg:prev_fg bg:color_maroon)\
 $username\
 $hostname\
-[](fg:prev_bg bg:color_yellow)\
+[](fg:prev_bg bg:color_blue)\
 $directory\
-[](fg:prev_bg bg:color_teal)\
+[](fg:prev_bg bg:color_sapphire)\
 ${custom.giturl}\
 $git_branch\
 $git_commit\
 $git_status\
-[](fg:prev_bg bg:color_blue)\
+[](fg:prev_bg bg:color_sky)\
 $c\
 $rust\
 $golang\
