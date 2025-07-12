@@ -1,6 +1,6 @@
 font-family = "TX-02"
-window-height = 25
-window-width = 115
+window-height = 30
+window-width = 120
 theme = snazzy
 background-opacity = 0.60
 background-blur = true
