@@ -1,0 +1,203 @@
+#!/usr/bin/env zsh
+# Route IPv4 destinations resolved from URLs or hostnames through a macOS VPN
+# gateway. Routes are ephemeral and may need to be refreshed after reconnecting.
+
+emulate -L zsh
+setopt local_options no_shwordsplit
+
+usage() {
+  cat <<'EOF'
+Usage: vpnsplit-route [--dry-run] [--gateway IPv4] <URL-or-hostname> [...]
+
+Resolve each argument to IPv4 addresses and add any missing host routes through
+the active VPN gateway. URL paths, credentials, and ports are ignored.
+
+Options:
+  --dry-run        Show routes that would be added without changing them.
+  --gateway IPv4   Use this VPN gateway instead of detecting one automatically.
+  -h, --help       Show this help.
+
+Examples:
+  vpnsplit-route portal.example.com https://service.example.com:8443/path
+  vpnsplit-route --dry-run --gateway 10.0.0.1 portal.example.com
+EOF
+}
+
+is_ipv4() {
+  local ip="$1" octet
+  local -a octets
+
+  [[ "$ip" =~ '^([0-9]{1,3}\.){3}[0-9]{1,3}$' ]] || return 1
+  octets=("${(@s:.:)ip}")
+  for octet in "${octets[@]}"; do
+    (( 10#$octet <= 255 )) || return 1
+  done
+}
+
+detect_vpn_gateway() {
+  local gateway
+
+  # Gateway-based entries associated with utun/tun/gpd interfaces are the
+  # normal split-tunnel routes on macOS. A default route directly on utun has
+  # no numeric next-hop and is intentionally ignored.
+  gateway=$(command netstat -nr -finet |
+    command awk '$1 ~ /^(10|default)$/ && $2 ~ /^[1-9]/ && $NF ~ /^(u?tun|gpd)[0-9]+$/ { print $2; exit }')
+  if [[ -z "$gateway" ]]; then
+    # Retain the on-network fallback used by the prior helper.
+    gateway=$(command netstat -nr -finet |
+      command awk '$1 ~ /^(10|default)$/ && $2 ~ /^10\./ { print $2; exit }')
+  fi
+
+  print -r -- "$gateway"
+}
+
+main() {
+  local dry_run=false vpn_gateway=''
+  local -a inputs hosts ips pending already unresolved invalid resolved
+  local -A seen_hosts seen_ips
+  local arg host ip current_gateway route_output
+  local failures=0
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --help|-h)
+        usage
+        return 0
+        ;;
+      --dry-run)
+        dry_run=true
+        ;;
+      --gateway)
+        shift
+        if [[ $# -eq 0 ]] || ! is_ipv4 "$1"; then
+          print -u2 'vpnsplit-route: --gateway requires an IPv4 address'
+          return 2
+        fi
+        vpn_gateway="$1"
+        ;;
+      --*)
+        print -u2 -- "vpnsplit-route: unknown option: $1"
+        return 2
+        ;;
+      *)
+        inputs+=("$1")
+        ;;
+    esac
+    shift
+  done
+
+  if (( ${#inputs} == 0 )); then
+    print -u2 'vpnsplit-route: provide at least one URL or hostname'
+    usage >&2
+    return 2
+  fi
+
+  if [[ -z "$vpn_gateway" ]]; then
+    vpn_gateway=$(detect_vpn_gateway)
+  fi
+  if [[ -z "$vpn_gateway" ]]; then
+    print -u2 'vpnsplit-route: VPN gateway not found; connect to the split-tunnel VPN first or pass --gateway'
+    return 1
+  fi
+
+  for arg in "${inputs[@]}"; do
+    host="$arg"
+    if [[ "$host" == *://* ]]; then
+      host="${host#*://}"
+    fi
+    host="${host%%[/?#]*}"
+    host="${host##*@}"
+
+    # IPv6 literals are intentionally unsupported in this initial version.
+    if [[ "$host" == \[* ]]; then
+      invalid+=("$arg (IPv6 is not supported)")
+      continue
+    fi
+    host="${host%%:*}"
+
+    if [[ -z "$host" || "$host" == *[[:space:]]* ]]; then
+      invalid+=("$arg")
+      continue
+    fi
+    if [[ -n "${seen_hosts[$host]:-}" ]]; then
+      continue
+    fi
+    seen_hosts[$host]=1
+    hosts+=("$host")
+  done
+
+  for host in "${hosts[@]}"; do
+    resolved=("${(@f)$(command dig +short A "$host" 2>/dev/null)}")
+    local found_for_host=false
+    for ip in "${resolved[@]}"; do
+      if ! is_ipv4 "$ip"; then
+        continue
+      fi
+      found_for_host=true
+      if [[ -z "${seen_ips[$ip]:-}" ]]; then
+        seen_ips[$ip]=1
+        ips+=("$ip")
+      fi
+    done
+    if [[ "$found_for_host" != true ]]; then
+      unresolved+=("$host")
+    fi
+  done
+
+  if (( ${#invalid} > 0 )); then
+    print -u2 -- "vpnsplit-route: invalid input: ${(j:, :)invalid}"
+    failures=1
+  fi
+  if (( ${#unresolved} > 0 )); then
+    print -u2 -- "vpnsplit-route: no IPv4 addresses found for: ${(j:, :)unresolved}"
+    failures=1
+  fi
+  if (( ${#ips} == 0 )); then
+    return 1
+  fi
+
+  print -- "VPN gateway: $vpn_gateway"
+  for ip in "${ips[@]}"; do
+    if ! route_output=$(command route -n get "$ip" 2>&1); then
+      print -u2 -- "vpnsplit-route: could not inspect route for $ip"
+      failures=1
+      continue
+    fi
+    current_gateway=$(print -r -- "$route_output" | command awk '/gateway:/{ print $2; exit }')
+    if [[ "$current_gateway" == "$vpn_gateway" ]]; then
+      already+=("$ip")
+    else
+      pending+=("$ip")
+    fi
+  done
+
+  if (( ${#already} > 0 )); then
+    print -- "Already routed through VPN: ${(j:, :)already}"
+  fi
+  if (( ${#pending} == 0 )); then
+    return $failures
+  fi
+
+  if [[ "$dry_run" == true ]]; then
+    print -- "Would add VPN host routes: ${(j:, :)pending}"
+    return $failures
+  fi
+
+  print -- "Adding VPN host routes: ${(j:, :)pending}"
+  if ! command sudo -v; then
+    print -u2 'vpnsplit-route: administrator authentication failed'
+    return 1
+  fi
+  for ip in "${pending[@]}"; do
+    if command sudo route -n add -host "$ip" "$vpn_gateway"; then
+      print -- "Added VPN route for $ip"
+    else
+      print -u2 -- "vpnsplit-route: failed to add VPN route for $ip"
+      failures=1
+    fi
+  done
+
+  return $failures
+}
+
+main "$@"
